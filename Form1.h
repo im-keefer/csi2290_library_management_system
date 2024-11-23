@@ -1,4 +1,6 @@
 #pragma once
+#include <queue>
+#include <list>
 
 struct Person {
 	std::string name;
@@ -9,12 +11,59 @@ struct Book {
 	std::string author;
 	std::string isbn;
 	Person borrower;
-	std::list<Person> waitlist;
+	std::queue<Person> waitlist;
 	Book(std::string title_in, std::string author_in, std::string isbn_in) 
 		: title(title_in), author(author_in), isbn(isbn_in)
 	{}
 	Book();
 };
+
+
+//Checking out & Returning book functions
+
+void queueToList(std::queue<Person> Q, std::list<std::string>& L) {
+	//Puts a queue of People into an list, the list is passed by reference, the queue is not.
+	//The list is front-to-back. (eg. the first element in the list is the front of the queue)
+	while (!Q.empty()) {
+		L.push_back(Q.front().name);
+		Q.pop();
+	}
+}
+
+void checkoutBook(Book& B,Person P) {
+	//If there isn't currently a borrower, P is the new borrower.
+	//Else, add P to the waitlist
+	if (B.borrower.name == "") {
+		B.borrower = P;
+
+	}
+	else {
+		B.waitlist.push(P);
+	}
+}
+
+int returnBook(Book& B) {
+	//If the book is currently in stock, return 0. (Only happens if there isn't a borrower.)
+	//Else, if the waitlist is not empty, set the person at the front of the queue
+		//as the current borrower. Then, pop the front of the queue. return 1.
+	//Else, reset the current borrower. return 1.
+	Person none;
+
+	if (B.borrower.name == "") {
+		return 0;
+	}
+	else if(!B.waitlist.empty()){
+		B.borrower = B.waitlist.front();
+		B.waitlist.pop();
+
+		return 1;
+	}
+	else {
+		B.borrower = none;
+
+		return 1;
+	}
+}
 
 std::list<Book> currentbooks;
 
