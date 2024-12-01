@@ -1,6 +1,7 @@
 #pragma once
 #include <queue>
 #include <list>
+#include <vector>
 
 struct Person {
 	std::string name;
@@ -23,6 +24,78 @@ struct Book {
 	};
 	Book() {};
 };
+
+
+//Array of Vectors & Associated Parts
+std::vector<Book*> authors[2503];
+std::vector<Book*> titles[2503];
+std::vector<Book*> isbns[2503];
+
+int hashFunc(std::string in) {
+	//Just a standard hash function
+	int out = 0;
+
+	for (char a : in) {
+		out += a;
+	}
+	return out % 2503;
+}
+
+void insert(Book* in) {
+	//Takes a pointer to a book.
+	//Gets indicies for the Author, Title, and ISBN. Then inserts the pointer at the correct indicies.
+	int aIndex = hashFunc(in->author);
+	int tIndex = hashFunc(in->title);
+	int iIndex = hashFunc(in->isbn);
+
+	authors[aIndex].push_back(in);
+	titles[tIndex].push_back(in);
+	isbns[iIndex].push_back(in);
+}
+
+int remove(Book* in) {
+	//Takes a pointer to a book.
+	//Gets the appropriate indicies for the arrays. Also gets the initial sizes for the vectors.
+	//Then, delete the book if it's in the vectors
+	//If it's deleted, return 0, if it's not, return 1.
+	//If something goes wrong and it's only found in some of them, return 2.
+	int aIndex = hashFunc(in->author);
+	int tIndex = hashFunc(in->title);
+	int iIndex = hashFunc(in->isbn);
+
+	int sizeA = authors[aIndex].size();
+	int sizeT = titles[tIndex].size();
+	int sizeI = isbns[iIndex].size();
+
+	bool workeda = false;
+	bool workedt = false;
+	bool workedi = false;
+	
+	authors[aIndex].erase(find(authors[aIndex].begin(), authors[aIndex].end(), in));
+	titles[tIndex].erase(find(titles[tIndex].begin(), titles[tIndex].end(), in));
+	isbns[iIndex].erase(find(isbns[iIndex].begin(), isbns[iIndex].end(), in));
+
+	if (sizeA != authors[aIndex].size()) {
+		workeda = true;
+	}
+	if (sizeT != titles[tIndex].size()) {
+		workedt = true;
+	}
+	if (sizeI != isbns[iIndex].size()) {
+		workedi = true;
+	}
+
+	if (workeda && workedt && workedi) {
+		return 0;
+	}
+	else if (workeda || workedt || workedi) {
+		return 2;
+	}
+	else {
+		return 1;
+	}
+
+}
 
 
 //Checking out & Returning book functions
@@ -71,6 +144,7 @@ int returnBook(Book& B) {
 		return 1;
 	}
 }
+
 
 std::list<Book> currentbooks;
 
