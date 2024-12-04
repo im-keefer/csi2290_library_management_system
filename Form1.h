@@ -2,6 +2,9 @@
 #include <queue>
 #include <list>
 #include <vector>
+#include <climits>
+#include <algorithm>
+#include <iterator>
 
 struct Person {
 	std::string name;
@@ -23,6 +26,12 @@ struct Book {
 	{
 	};
 	Book() {};
+	bool operator==(const Book& other)
+	{
+		if ((this->title == other.title) && (this->author == other.author) && (this->isbn == other.isbn))
+			return true;
+		return false;
+	}
 };
 
 void initializeBooks(std::list<Book>& L) {
@@ -78,6 +87,37 @@ void initializeBooks(std::list<Book>& L) {
 std::vector<Book*> authors[2503];
 std::vector<Book*> titles[2503];
 std::vector<Book*> isbns[2503];
+
+int hashFunc(std::string in) {
+	//Just a standard hash function
+	int out = 0;
+
+	for (char a : in) {
+		out += a;
+	}
+	return out % 2503;
+}
+
+void insert(Book* in) {
+	//Takes a pointer to a book.
+	//Gets indicies for the Author, Title, and ISBN. Then inserts the pointer at the correct indicies.
+	int aIndex = hashFunc(in->author);
+	int tIndex = hashFunc(in->title);
+	int iIndex = hashFunc(in->isbn);
+
+	authors[aIndex].push_back(in);
+	titles[tIndex].push_back(in);
+	isbns[iIndex].push_back(in);
+}
+
+//Array of Vectors & Associated Parts
+std::vector<Book*> authors[2503];
+std::vector<Book*> titles[2503];
+std::vector<Book*> isbns[2503];
+
+std::vector<Book*> searchResults1;
+std::vector<Book*> searchResults2;
+std::vector<Book*> searchResults3;
 
 int hashFunc(std::string in) {
 	//Just a standard hash function
@@ -275,6 +315,17 @@ namespace CppCLRWinFormsProject {
 	private: System::Windows::Forms::TextBox^ txtUpNextLook;
 
 	private: System::Windows::Forms::Label^ label9;
+	private: System::Windows::Forms::Label^ label11;
+	private: System::Windows::Forms::Label^ label10;
+	private: System::Windows::Forms::TextBox^ txtISBNSearch1;
+
+	private: System::Windows::Forms::TextBox^ txtAuthorSearch1;
+
+	private: System::Windows::Forms::TextBox^ txtTitleSearch1;
+	private: System::Windows::Forms::Label^ label12;
+	private: System::Windows::Forms::ListBox^ lbSearchResult1;
+	private: System::Windows::Forms::Button^ btnSearch1;
+
 
 
 	private:
@@ -318,8 +369,17 @@ namespace CppCLRWinFormsProject {
 			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
 			this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
 			this->tabPage4 = (gcnew System::Windows::Forms::TabPage());
+			this->txtTitleSearch1 = (gcnew System::Windows::Forms::TextBox());
+			this->txtAuthorSearch1 = (gcnew System::Windows::Forms::TextBox());
+			this->txtISBNSearch1 = (gcnew System::Windows::Forms::TextBox());
+			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->label11 = (gcnew System::Windows::Forms::Label());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->btnSearch1 = (gcnew System::Windows::Forms::Button());
+			this->lbSearchResult1 = (gcnew System::Windows::Forms::ListBox());
 			this->tabControl->SuspendLayout();
 			this->tabPage1->SuspendLayout();
+			this->tabPage2->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// tabControl
@@ -568,6 +628,14 @@ namespace CppCLRWinFormsProject {
 			// 
 			// tabPage2
 			// 
+			this->tabPage2->Controls->Add(this->lbSearchResult1);
+			this->tabPage2->Controls->Add(this->btnSearch1);
+			this->tabPage2->Controls->Add(this->label12);
+			this->tabPage2->Controls->Add(this->label11);
+			this->tabPage2->Controls->Add(this->label10);
+			this->tabPage2->Controls->Add(this->txtISBNSearch1);
+			this->tabPage2->Controls->Add(this->txtAuthorSearch1);
+			this->tabPage2->Controls->Add(this->txtTitleSearch1);
 			this->tabPage2->Location = System::Drawing::Point(4, 25);
 			this->tabPage2->Name = L"tabPage2";
 			this->tabPage2->Padding = System::Windows::Forms::Padding(3);
@@ -596,6 +664,73 @@ namespace CppCLRWinFormsProject {
 			this->tabPage4->Text = L"tabPage4";
 			this->tabPage4->UseVisualStyleBackColor = true;
 			// 
+			// txtTitleSearch1
+			// 
+			this->txtTitleSearch1->Location = System::Drawing::Point(65, 7);
+			this->txtTitleSearch1->Name = L"txtTitleSearch1";
+			this->txtTitleSearch1->Size = System::Drawing::Size(125, 22);
+			this->txtTitleSearch1->TabIndex = 0;
+			// 
+			// txtAuthorSearch1
+			// 
+			this->txtAuthorSearch1->Location = System::Drawing::Point(293, 7);
+			this->txtAuthorSearch1->Name = L"txtAuthorSearch1";
+			this->txtAuthorSearch1->Size = System::Drawing::Size(125, 22);
+			this->txtAuthorSearch1->TabIndex = 1;
+			// 
+			// txtISBNSearch1
+			// 
+			this->txtISBNSearch1->Location = System::Drawing::Point(494, 7);
+			this->txtISBNSearch1->Name = L"txtISBNSearch1";
+			this->txtISBNSearch1->Size = System::Drawing::Size(125, 22);
+			this->txtISBNSearch1->TabIndex = 2;
+			// 
+			// label10
+			// 
+			this->label10->AutoSize = true;
+			this->label10->Location = System::Drawing::Point(7, 7);
+			this->label10->Name = L"label10";
+			this->label10->Size = System::Drawing::Size(33, 16);
+			this->label10->TabIndex = 3;
+			this->label10->Text = L"Title";
+			// 
+			// label11
+			// 
+			this->label11->AutoSize = true;
+			this->label11->Location = System::Drawing::Point(219, 10);
+			this->label11->Name = L"label11";
+			this->label11->Size = System::Drawing::Size(45, 16);
+			this->label11->TabIndex = 4;
+			this->label11->Text = L"Author";
+			// 
+			// label12
+			// 
+			this->label12->AutoSize = true;
+			this->label12->Location = System::Drawing::Point(437, 10);
+			this->label12->Name = L"label12";
+			this->label12->Size = System::Drawing::Size(38, 16);
+			this->label12->TabIndex = 5;
+			this->label12->Text = L"ISBN";
+			// 
+			// btnSearch1
+			// 
+			this->btnSearch1->Location = System::Drawing::Point(634, 7);
+			this->btnSearch1->Name = L"btnSearch1";
+			this->btnSearch1->Size = System::Drawing::Size(142, 23);
+			this->btnSearch1->TabIndex = 6;
+			this->btnSearch1->Text = L"Search";
+			this->btnSearch1->UseVisualStyleBackColor = true;
+			this->btnSearch1->Click += gcnew System::EventHandler(this, &Form1::btnSearch1_Click);
+			// 
+			// lbSearchResult1
+			// 
+			this->lbSearchResult1->FormattingEnabled = true;
+			this->lbSearchResult1->ItemHeight = 16;
+			this->lbSearchResult1->Location = System::Drawing::Point(10, 40);
+			this->lbSearchResult1->Name = L"lbSearchResult1";
+			this->lbSearchResult1->Size = System::Drawing::Size(283, 372);
+			this->lbSearchResult1->TabIndex = 7;
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -607,6 +742,8 @@ namespace CppCLRWinFormsProject {
 			this->tabControl->ResumeLayout(false);
 			this->tabPage1->ResumeLayout(false);
 			this->tabPage1->PerformLayout();
+			this->tabPage2->ResumeLayout(false);
+			this->tabPage2->PerformLayout();
 			this->ResumeLayout(false);
 
 		}
@@ -640,8 +777,12 @@ namespace CppCLRWinFormsProject {
 		MarshalString(this->txtTitle->Text, title); // Convert System::String to std::string
 		MarshalString(this->txtAuthor->Text, author);
 		MarshalString(this->txtISBN->Text, isbn);
-		Book newBook(title, author, isbn);
-		currentbooks.push_front(newBook);
+		Book* newBook = new Book; // Intentionally carve out some memory for this book, otherwise the values get all messed up later!
+		newBook->title = title;
+		newBook->author = author;
+		newBook->isbn = isbn;
+		currentbooks.push_front(*newBook);
+		insert(newBook);
 		// Refresh the Book list
 		this->lbBookList1->Items->Clear();
 		for (Book book : currentbooks) {
@@ -654,6 +795,10 @@ namespace CppCLRWinFormsProject {
 			std::list<Book>::iterator it;
 			it = currentbooks.begin();
 			advance(it, selectedBookIndex);
+			// This looks weird, let me explain....
+			// This is the pointer, to the dereferenced iterator which gives us the book, 
+			// which gives us the pointer to the book
+			remove(&(*it));
 			currentbooks.erase(it);
 			// Refresh the Book list
 			this->lbBookList1->Items->Clear();
@@ -709,6 +854,183 @@ namespace CppCLRWinFormsProject {
 				}
 				this->txtBorrowerLook->Text = gcnew String(it->borrower.name.c_str());
 			}
+		}
+	}
+	private: System::Void btnSearch1_Click(System::Object^ sender, System::EventArgs^ e) {
+		this->lbSearchResult1->Items->Clear();
+		searchResults1.clear();
+		std::string title, author, isbn;
+		MarshalString(this->txtTitleSearch1->Text, title); // Convert System::String to std::string
+		MarshalString(this->txtAuthorSearch1->Text, author);
+		MarshalString(this->txtISBNSearch1->Text, isbn);
+		int aIndex = -1, tIndex = -1, iIndex = -1;
+		// If all three entries are empty, just return
+		if (title == "" && author == "" && isbn == "")
+			return;
+		// Find our hash indices
+		if (author != "")
+			aIndex = hashFunc(author);
+		if (title != "")
+			tIndex = hashFunc(title);
+		if (isbn != "")
+			iIndex = hashFunc(isbn);
+		// Determine the length of the results, and use that as our comparison table
+		int smallestTable = -1; // 1 = author, 2 = title, 3 = isbn
+		std::vector<Book*> *smallTable;
+		int aSize = INT_MAX, tSize = INT_MAX, iSize = INT_MAX;
+		if (aIndex != -1)
+			aSize = authors[aIndex].size();
+		if (tIndex != -1)
+			tSize = titles[tIndex].size();
+		if (iIndex != -1)
+			iSize = isbns[iIndex].size();
+		// If we find that all of our sizes are not updated, just return
+		if (aSize == INT_MAX && tSize == INT_MAX && iSize == INT_MAX)
+			return;
+		int smallestSize = std::min({ aSize, tSize, iSize });
+		if (aSize == smallestSize) {
+			smallestTable = 1;
+			smallTable = &authors[aIndex];
+		}
+		if (tSize == smallestSize) {
+			smallestTable = 2;
+			smallTable = &titles[tIndex];
+		}
+		if (iSize == smallestSize) {
+			smallestTable = 3;
+			smallTable = &isbns[iIndex];
+		}
+		// Now, we begin to add results
+		std::vector<Book*> temp1;
+		std::vector<Book*> temp2;
+		if (smallestTable == 1) { // We start with the authors
+			if (tIndex != -1) {
+				for (Book* bookA : *smallTable) {
+					for (Book* bookB : titles[tIndex]) {
+						if (*bookA == *bookB)
+							temp1.push_back(bookA);
+					}
+				}
+			}
+			if (iIndex != -1) {
+				for (Book* bookA : *smallTable) {
+					for (Book* bookB : isbns[iIndex]) {
+						if (*bookA == *bookB)
+							temp2.push_back(bookA);
+					}
+				}
+			}
+			if (temp1.size() != 0 && temp2.size() != 0) {
+				for (Book* bookA : temp1) {
+					for (Book* bookB : temp2) {
+						if (*bookA == *bookB)
+							searchResults1.push_back(bookA);
+					}
+				}
+			}
+			else if (temp1.size() != 0) {
+				for (Book* book : temp1) {
+					searchResults1.push_back(book);
+				}
+			}
+			else if (temp2.size() != 0) {
+				for (Book* book : temp2) {
+					searchResults1.push_back(book);
+				}
+			}
+			else { // It looks like we only filled out an author
+				for (Book* book : *smallTable) {
+					searchResults1.push_back(book);
+				}
+			}
+		}
+		else if (smallestTable == 2) { // We start with the title
+			if (aIndex != -1) {
+				for (Book* bookA : *smallTable) {
+					for (Book* bookB : authors[aIndex]) {
+						if (*bookA == *bookB)
+							temp1.push_back(bookA);
+					}
+				}
+			}
+			if (iIndex != -1) {
+				for (Book* bookA : *smallTable) {
+					for (Book* bookB : isbns[iIndex]) {
+						if (*bookA == *bookB)
+							temp2.push_back(bookA);
+					}
+				}
+			}
+			if (temp1.size() != 0 && temp2.size() != 0) {
+				for (Book* bookA : temp1) {
+					for (Book* bookB : temp2) {
+						if (*bookA == *bookB)
+							searchResults1.push_back(bookA);
+					}
+				}
+			}
+			else if (temp1.size() != 0) {
+				for (Book* book : temp1) {
+					searchResults1.push_back(book);
+				}
+			}
+			else if (temp2.size() != 0) {
+				for (Book* book : temp2) {
+					searchResults1.push_back(book);
+				}
+			}
+			else { // It looks like we only filled out a title
+				for (Book* book : *smallTable) {
+					searchResults1.push_back(book);
+				}
+			}
+		}
+		else if (smallestTable == 3) { // We start with the ISBN
+			if (aIndex != -1) {
+				for (Book* bookA : *smallTable) {
+					for (Book* bookB : authors[aIndex]) {
+						if (*bookA == *bookB)
+							temp1.push_back(bookA);
+					}
+				}
+			}
+			if (tIndex != -1) {
+				for (Book* bookA : *smallTable) {
+					for (Book* bookB : titles[tIndex]) {
+						if (*bookA == *bookB)
+							temp2.push_back(bookA);
+					}
+				}
+			}
+			if (temp1.size() != 0 && temp2.size() != 0) {
+				for (Book* bookA : temp1) {
+					for (Book* bookB : temp2) {
+						if (*bookA == *bookB)
+							searchResults1.push_back(bookA);
+					}
+				}
+			}
+			else if (temp1.size() != 0) {
+				for (Book* book : temp1) {
+					searchResults1.push_back(book);
+				}
+			}
+			else if (temp2.size() != 0) {
+				for (Book* book : temp2) {
+					searchResults1.push_back(book);
+				}
+			}
+			else { // It looks like we only filled out an isbn
+				for (Book* book : *smallTable) {
+					searchResults1.push_back(book);
+				}
+			}
+		}
+		// At last, we place the results into our list box
+		for (Book* book : searchResults1) {
+			std::string cname = book->title.c_str();
+			System::String^ name = gcnew String(book->title.c_str()); // And then we go back
+			this->lbSearchResult1->Items->Add(name);
 		}
 	}
 };
