@@ -115,44 +115,50 @@ void initializeBooks(std::list<Book>& L) {
 	//Takes a list of books. Adds 5 books, use as a starting point.
 	//To add more, use the format:
 	// 
-	//	B = *(new Book("title","author","isbn"));
+	//	B = Book("title","author","isbn");
 	//	L.push_back(B);
 	// 
-	//	insert(&B);
+	//	BP = L.back()*;
+	// 
+	//	insert(BP);
 	//
 
-	Book B = *(new Book("Data Structures & Algorithm Analysis in C++ 4th Edition", "Mark Allen Weiss", "978-0-13-284737-7"));
+	Book B = Book("Data Structures & Algorithm Analysis in C++ 4th Edition", "Mark Allen Weiss", "978-0-13-284737-7");
 	B.borrower = Person("Bob Smith");
 
 	L.push_back(B);
+	Book* BP = &L.back();
 
-	insert(&B);
+	insert(BP);
 
-	B = *(new Book("The Merriam-Webster Dictionary (2022)", "N/A", "978-0-87779-095-2"));
-
-	L.push_back(B);
-
-	insert(&B);
-
-	B = *(new Book("Harry Potter and The Sorcerer's Stone", "J.K. Rowling", "978-0590353427"));
+	B = Book("The Merriam-Webster Dictionary (2022)", "N/A", "978-0-87779-095-2");
 
 	L.push_back(B);
+	BP = &L.back();
 
-	insert(&B);
-
-	B = *(new Book("C++ for Dummies 6th Edition", "Stephen R. Davis", "978-0470317266"));
-
-	L.push_back(B);
-
-	insert(&B);
-
-	B = *(new Book("Introduction to Analog & Digital Circuits 2nd Edition", "Brian K. Dean & Daniel Llamocca", "978-1-7924-1609-5"));
+	insert(BP);
 
 	L.push_back(B);
+	BP = &L.back();
 
-	insert(&B);
+	insert(BP);
+
+	B = Book("C++ for Dummies 6th Edition", "Stephen R. Davis", "978-0470317266");
+
+
+	L.push_back(B);
+	BP = &L.back();
+
+	insert(BP);
+
+	B = Book("Introduction to Analog & Digital Circuits 2nd Edition", "Brian K. Dean & Daniel Llamocca", "978-1-7924-1609-5");
+
+
+	L.push_back(B);
+	BP = &L.back();
+
+	insert(BP);
 }
-
 
 //Checking out & Returning book functions
 
