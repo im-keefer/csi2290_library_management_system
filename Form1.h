@@ -251,8 +251,8 @@ namespace CppCLRWinFormsProject {
 	protected:
 	private: System::Windows::Forms::TabPage^ tabPage1;
 	private: System::Windows::Forms::TabPage^ tabPage2;
-	private: System::Windows::Forms::TabPage^ tabPage3;
-	private: System::Windows::Forms::TabPage^ tabPage4;
+
+
 	private: System::Windows::Forms::ListBox^ lbBookList1;
 	private: System::Windows::Forms::TextBox^ txtISBN;
 
@@ -275,11 +275,11 @@ namespace CppCLRWinFormsProject {
 	private: System::Windows::Forms::TextBox^ txtBorrowerLook;
 	private: System::Windows::Forms::Label^ label7;
 
-	private: System::Windows::Forms::Button^ btnBorrowBook;
-	private: System::Windows::Forms::Label^ label8;
-	private: System::Windows::Forms::TextBox^ txtPersonName;
 
-	private: System::Windows::Forms::Button^ btnReturnBook;
+
+
+
+
 	private: System::Windows::Forms::TextBox^ txtUpNextLook;
 
 	private: System::Windows::Forms::Label^ label9;
@@ -293,6 +293,17 @@ namespace CppCLRWinFormsProject {
 	private: System::Windows::Forms::Label^ label12;
 	private: System::Windows::Forms::ListBox^ lbSearchResult1;
 	private: System::Windows::Forms::Button^ btnSearch1;
+	private: System::Windows::Forms::Label^ label8;
+	private: System::Windows::Forms::TextBox^ txtPersonName;
+	private: System::Windows::Forms::Button^ btnReturnBook;
+	private: System::Windows::Forms::Button^ btnBorrowBook;
+	private: System::Windows::Forms::TextBox^ txtWaitlistFirst;
+
+	private: System::Windows::Forms::Label^ label13;
+	private: System::Windows::Forms::TextBox^ txtBorrower;
+
+
+	private: System::Windows::Forms::Label^ label14;
 
 
 
@@ -313,10 +324,6 @@ namespace CppCLRWinFormsProject {
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
 			this->txtUpNextLook = (gcnew System::Windows::Forms::TextBox());
 			this->label9 = (gcnew System::Windows::Forms::Label());
-			this->label8 = (gcnew System::Windows::Forms::Label());
-			this->txtPersonName = (gcnew System::Windows::Forms::TextBox());
-			this->btnReturnBook = (gcnew System::Windows::Forms::Button());
-			this->btnBorrowBook = (gcnew System::Windows::Forms::Button());
 			this->txtBorrowerLook = (gcnew System::Windows::Forms::TextBox());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->btnDeleteBook = (gcnew System::Windows::Forms::Button());
@@ -335,16 +342,22 @@ namespace CppCLRWinFormsProject {
 			this->txtTitle = (gcnew System::Windows::Forms::TextBox());
 			this->lbBookList1 = (gcnew System::Windows::Forms::ListBox());
 			this->tabPage2 = (gcnew System::Windows::Forms::TabPage());
-			this->tabPage3 = (gcnew System::Windows::Forms::TabPage());
-			this->tabPage4 = (gcnew System::Windows::Forms::TabPage());
-			this->txtTitleSearch1 = (gcnew System::Windows::Forms::TextBox());
-			this->txtAuthorSearch1 = (gcnew System::Windows::Forms::TextBox());
-			this->txtISBNSearch1 = (gcnew System::Windows::Forms::TextBox());
-			this->label10 = (gcnew System::Windows::Forms::Label());
-			this->label11 = (gcnew System::Windows::Forms::Label());
-			this->label12 = (gcnew System::Windows::Forms::Label());
-			this->btnSearch1 = (gcnew System::Windows::Forms::Button());
+			this->txtWaitlistFirst = (gcnew System::Windows::Forms::TextBox());
+			this->label13 = (gcnew System::Windows::Forms::Label());
+			this->txtBorrower = (gcnew System::Windows::Forms::TextBox());
+			this->label14 = (gcnew System::Windows::Forms::Label());
+			this->label8 = (gcnew System::Windows::Forms::Label());
+			this->txtPersonName = (gcnew System::Windows::Forms::TextBox());
+			this->btnReturnBook = (gcnew System::Windows::Forms::Button());
+			this->btnBorrowBook = (gcnew System::Windows::Forms::Button());
 			this->lbSearchResult1 = (gcnew System::Windows::Forms::ListBox());
+			this->btnSearch1 = (gcnew System::Windows::Forms::Button());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->label11 = (gcnew System::Windows::Forms::Label());
+			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->txtISBNSearch1 = (gcnew System::Windows::Forms::TextBox());
+			this->txtAuthorSearch1 = (gcnew System::Windows::Forms::TextBox());
+			this->txtTitleSearch1 = (gcnew System::Windows::Forms::TextBox());
 			this->tabControl->SuspendLayout();
 			this->tabPage1->SuspendLayout();
 			this->tabPage2->SuspendLayout();
@@ -354,8 +367,6 @@ namespace CppCLRWinFormsProject {
 			// 
 			this->tabControl->Controls->Add(this->tabPage1);
 			this->tabControl->Controls->Add(this->tabPage2);
-			this->tabControl->Controls->Add(this->tabPage3);
-			this->tabControl->Controls->Add(this->tabPage4);
 			this->tabControl->Location = System::Drawing::Point(12, 12);
 			this->tabControl->Name = L"tabControl";
 			this->tabControl->SelectedIndex = 0;
@@ -366,10 +377,6 @@ namespace CppCLRWinFormsProject {
 			// 
 			this->tabPage1->Controls->Add(this->txtUpNextLook);
 			this->tabPage1->Controls->Add(this->label9);
-			this->tabPage1->Controls->Add(this->label8);
-			this->tabPage1->Controls->Add(this->txtPersonName);
-			this->tabPage1->Controls->Add(this->btnReturnBook);
-			this->tabPage1->Controls->Add(this->btnBorrowBook);
 			this->tabPage1->Controls->Add(this->txtBorrowerLook);
 			this->tabPage1->Controls->Add(this->label7);
 			this->tabPage1->Controls->Add(this->btnDeleteBook);
@@ -411,42 +418,6 @@ namespace CppCLRWinFormsProject {
 			this->label9->Size = System::Drawing::Size(55, 16);
 			this->label9->TabIndex = 22;
 			this->label9->Text = L"Up Next";
-			// 
-			// label8
-			// 
-			this->label8->AutoSize = true;
-			this->label8->Location = System::Drawing::Point(318, 340);
-			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(50, 16);
-			this->label8->TabIndex = 21;
-			this->label8->Text = L"Person";
-			// 
-			// txtPersonName
-			// 
-			this->txtPersonName->Location = System::Drawing::Point(374, 337);
-			this->txtPersonName->Name = L"txtPersonName";
-			this->txtPersonName->Size = System::Drawing::Size(170, 22);
-			this->txtPersonName->TabIndex = 20;
-			// 
-			// btnReturnBook
-			// 
-			this->btnReturnBook->Location = System::Drawing::Point(321, 399);
-			this->btnReturnBook->Name = L"btnReturnBook";
-			this->btnReturnBook->Size = System::Drawing::Size(223, 28);
-			this->btnReturnBook->TabIndex = 19;
-			this->btnReturnBook->Text = L"Return Book";
-			this->btnReturnBook->UseVisualStyleBackColor = true;
-			this->btnReturnBook->Click += gcnew System::EventHandler(this, &Form1::btnReturnBook_Click);
-			// 
-			// btnBorrowBook
-			// 
-			this->btnBorrowBook->Location = System::Drawing::Point(321, 365);
-			this->btnBorrowBook->Name = L"btnBorrowBook";
-			this->btnBorrowBook->Size = System::Drawing::Size(223, 28);
-			this->btnBorrowBook->TabIndex = 18;
-			this->btnBorrowBook->Text = L"Borrow Book";
-			this->btnBorrowBook->UseVisualStyleBackColor = true;
-			this->btnBorrowBook->Click += gcnew System::EventHandler(this, &Form1::btnBorrowBook_Click);
 			// 
 			// txtBorrowerLook
 			// 
@@ -596,6 +567,14 @@ namespace CppCLRWinFormsProject {
 			// 
 			// tabPage2
 			// 
+			this->tabPage2->Controls->Add(this->txtWaitlistFirst);
+			this->tabPage2->Controls->Add(this->label13);
+			this->tabPage2->Controls->Add(this->txtBorrower);
+			this->tabPage2->Controls->Add(this->label14);
+			this->tabPage2->Controls->Add(this->label8);
+			this->tabPage2->Controls->Add(this->txtPersonName);
+			this->tabPage2->Controls->Add(this->btnReturnBook);
+			this->tabPage2->Controls->Add(this->btnBorrowBook);
 			this->tabPage2->Controls->Add(this->lbSearchResult1);
 			this->tabPage2->Controls->Add(this->btnSearch1);
 			this->tabPage2->Controls->Add(this->label12);
@@ -612,73 +591,84 @@ namespace CppCLRWinFormsProject {
 			this->tabPage2->Text = L"Borrow & Return";
 			this->tabPage2->UseVisualStyleBackColor = true;
 			// 
-			// tabPage3
+			// txtWaitlistFirst
 			// 
-			this->tabPage3->Location = System::Drawing::Point(4, 25);
-			this->tabPage3->Name = L"tabPage3";
-			this->tabPage3->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage3->Size = System::Drawing::Size(782, 434);
-			this->tabPage3->TabIndex = 2;
-			this->tabPage3->Text = L"tabPage3";
-			this->tabPage3->UseVisualStyleBackColor = true;
+			this->txtWaitlistFirst->Location = System::Drawing::Point(631, 304);
+			this->txtWaitlistFirst->Name = L"txtWaitlistFirst";
+			this->txtWaitlistFirst->ReadOnly = true;
+			this->txtWaitlistFirst->Size = System::Drawing::Size(145, 22);
+			this->txtWaitlistFirst->TabIndex = 35;
 			// 
-			// tabPage4
+			// label13
 			// 
-			this->tabPage4->Location = System::Drawing::Point(4, 25);
-			this->tabPage4->Name = L"tabPage4";
-			this->tabPage4->Padding = System::Windows::Forms::Padding(3);
-			this->tabPage4->Size = System::Drawing::Size(782, 434);
-			this->tabPage4->TabIndex = 3;
-			this->tabPage4->Text = L"tabPage4";
-			this->tabPage4->UseVisualStyleBackColor = true;
+			this->label13->AutoSize = true;
+			this->label13->Location = System::Drawing::Point(550, 307);
+			this->label13->Name = L"label13";
+			this->label13->Size = System::Drawing::Size(55, 16);
+			this->label13->TabIndex = 34;
+			this->label13->Text = L"Up Next";
 			// 
-			// txtTitleSearch1
+			// txtBorrower
 			// 
-			this->txtTitleSearch1->Location = System::Drawing::Point(65, 7);
-			this->txtTitleSearch1->Name = L"txtTitleSearch1";
-			this->txtTitleSearch1->Size = System::Drawing::Size(125, 22);
-			this->txtTitleSearch1->TabIndex = 0;
+			this->txtBorrower->Location = System::Drawing::Point(631, 276);
+			this->txtBorrower->Name = L"txtBorrower";
+			this->txtBorrower->ReadOnly = true;
+			this->txtBorrower->Size = System::Drawing::Size(145, 22);
+			this->txtBorrower->TabIndex = 33;
 			// 
-			// txtAuthorSearch1
+			// label14
 			// 
-			this->txtAuthorSearch1->Location = System::Drawing::Point(293, 7);
-			this->txtAuthorSearch1->Name = L"txtAuthorSearch1";
-			this->txtAuthorSearch1->Size = System::Drawing::Size(125, 22);
-			this->txtAuthorSearch1->TabIndex = 1;
+			this->label14->AutoSize = true;
+			this->label14->Location = System::Drawing::Point(550, 279);
+			this->label14->Name = L"label14";
+			this->label14->Size = System::Drawing::Size(61, 16);
+			this->label14->TabIndex = 32;
+			this->label14->Text = L"Borrower";
 			// 
-			// txtISBNSearch1
+			// label8
 			// 
-			this->txtISBNSearch1->Location = System::Drawing::Point(494, 7);
-			this->txtISBNSearch1->Name = L"txtISBNSearch1";
-			this->txtISBNSearch1->Size = System::Drawing::Size(125, 22);
-			this->txtISBNSearch1->TabIndex = 2;
+			this->label8->AutoSize = true;
+			this->label8->Location = System::Drawing::Point(550, 338);
+			this->label8->Name = L"label8";
+			this->label8->Size = System::Drawing::Size(50, 16);
+			this->label8->TabIndex = 25;
+			this->label8->Text = L"Person";
 			// 
-			// label10
+			// txtPersonName
 			// 
-			this->label10->AutoSize = true;
-			this->label10->Location = System::Drawing::Point(7, 7);
-			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(33, 16);
-			this->label10->TabIndex = 3;
-			this->label10->Text = L"Title";
+			this->txtPersonName->Location = System::Drawing::Point(606, 335);
+			this->txtPersonName->Name = L"txtPersonName";
+			this->txtPersonName->Size = System::Drawing::Size(170, 22);
+			this->txtPersonName->TabIndex = 24;
 			// 
-			// label11
+			// btnReturnBook
 			// 
-			this->label11->AutoSize = true;
-			this->label11->Location = System::Drawing::Point(219, 10);
-			this->label11->Name = L"label11";
-			this->label11->Size = System::Drawing::Size(45, 16);
-			this->label11->TabIndex = 4;
-			this->label11->Text = L"Author";
+			this->btnReturnBook->Location = System::Drawing::Point(553, 397);
+			this->btnReturnBook->Name = L"btnReturnBook";
+			this->btnReturnBook->Size = System::Drawing::Size(223, 28);
+			this->btnReturnBook->TabIndex = 23;
+			this->btnReturnBook->Text = L"Return Book";
+			this->btnReturnBook->UseVisualStyleBackColor = true;
 			// 
-			// label12
+			// btnBorrowBook
 			// 
-			this->label12->AutoSize = true;
-			this->label12->Location = System::Drawing::Point(437, 10);
-			this->label12->Name = L"label12";
-			this->label12->Size = System::Drawing::Size(38, 16);
-			this->label12->TabIndex = 5;
-			this->label12->Text = L"ISBN";
+			this->btnBorrowBook->Location = System::Drawing::Point(553, 363);
+			this->btnBorrowBook->Name = L"btnBorrowBook";
+			this->btnBorrowBook->Size = System::Drawing::Size(223, 28);
+			this->btnBorrowBook->TabIndex = 22;
+			this->btnBorrowBook->Text = L"Borrow Book";
+			this->btnBorrowBook->UseVisualStyleBackColor = true;
+			this->btnBorrowBook->Click += gcnew System::EventHandler(this, &Form1::btnBorrowBook_Click);
+			// 
+			// lbSearchResult1
+			// 
+			this->lbSearchResult1->FormattingEnabled = true;
+			this->lbSearchResult1->ItemHeight = 16;
+			this->lbSearchResult1->Location = System::Drawing::Point(10, 40);
+			this->lbSearchResult1->Name = L"lbSearchResult1";
+			this->lbSearchResult1->Size = System::Drawing::Size(283, 388);
+			this->lbSearchResult1->TabIndex = 7;
+			this->lbSearchResult1->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::lbSearchResult1_SelectedIndexChanged);
 			// 
 			// btnSearch1
 			// 
@@ -690,14 +680,53 @@ namespace CppCLRWinFormsProject {
 			this->btnSearch1->UseVisualStyleBackColor = true;
 			this->btnSearch1->Click += gcnew System::EventHandler(this, &Form1::btnSearch1_Click);
 			// 
-			// lbSearchResult1
+			// label12
 			// 
-			this->lbSearchResult1->FormattingEnabled = true;
-			this->lbSearchResult1->ItemHeight = 16;
-			this->lbSearchResult1->Location = System::Drawing::Point(10, 40);
-			this->lbSearchResult1->Name = L"lbSearchResult1";
-			this->lbSearchResult1->Size = System::Drawing::Size(283, 372);
-			this->lbSearchResult1->TabIndex = 7;
+			this->label12->AutoSize = true;
+			this->label12->Location = System::Drawing::Point(437, 10);
+			this->label12->Name = L"label12";
+			this->label12->Size = System::Drawing::Size(38, 16);
+			this->label12->TabIndex = 5;
+			this->label12->Text = L"ISBN";
+			// 
+			// label11
+			// 
+			this->label11->AutoSize = true;
+			this->label11->Location = System::Drawing::Point(219, 10);
+			this->label11->Name = L"label11";
+			this->label11->Size = System::Drawing::Size(45, 16);
+			this->label11->TabIndex = 4;
+			this->label11->Text = L"Author";
+			// 
+			// label10
+			// 
+			this->label10->AutoSize = true;
+			this->label10->Location = System::Drawing::Point(7, 7);
+			this->label10->Name = L"label10";
+			this->label10->Size = System::Drawing::Size(33, 16);
+			this->label10->TabIndex = 3;
+			this->label10->Text = L"Title";
+			// 
+			// txtISBNSearch1
+			// 
+			this->txtISBNSearch1->Location = System::Drawing::Point(494, 7);
+			this->txtISBNSearch1->Name = L"txtISBNSearch1";
+			this->txtISBNSearch1->Size = System::Drawing::Size(125, 22);
+			this->txtISBNSearch1->TabIndex = 2;
+			// 
+			// txtAuthorSearch1
+			// 
+			this->txtAuthorSearch1->Location = System::Drawing::Point(293, 7);
+			this->txtAuthorSearch1->Name = L"txtAuthorSearch1";
+			this->txtAuthorSearch1->Size = System::Drawing::Size(125, 22);
+			this->txtAuthorSearch1->TabIndex = 1;
+			// 
+			// txtTitleSearch1
+			// 
+			this->txtTitleSearch1->Location = System::Drawing::Point(65, 7);
+			this->txtTitleSearch1->Name = L"txtTitleSearch1";
+			this->txtTitleSearch1->Size = System::Drawing::Size(125, 22);
+			this->txtTitleSearch1->TabIndex = 0;
 			// 
 			// Form1
 			// 
@@ -718,6 +747,7 @@ namespace CppCLRWinFormsProject {
 #pragma endregion
 	private:
 		int selectedBookIndex = -1;
+		int selectedSearchIndex = -1;
 	private: System::Void lbBookList1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 		// Our index represents how far we need to go into the linked list to access the book.
 		int index = 0;
@@ -783,49 +813,43 @@ namespace CppCLRWinFormsProject {
 		}
 	}
 	private: System::Void btnBorrowBook_Click(System::Object^ sender, System::EventArgs^ e) {
-		// TODO: This button needs to go into a separate tab, and it needs to pull from the
-		// Search results once those are implemented.
-		if (!currentbooks.empty() && selectedBookIndex >= 0 && this->txtPersonName->Text != "") {
+		if (!searchResults1.empty() && selectedSearchIndex >= 0 && this->txtPersonName->Text != "") {
 			// Get to our specific book
-			std::list<Book>::iterator it;
-			it = currentbooks.begin();
-			advance(it, selectedBookIndex); // "it" is now our book
+			Book* book = searchResults1[selectedSearchIndex];
 			std::string name;
 			MarshalString(this->txtPersonName->Text, name);
 			Person person(name);
-			if (checkoutBook(*it, person)) { // Is the waitlist updated?
-				Person upnext = it->waitlist.front();
+			if (checkoutBook(*book, person)) { // Is the waitlist updated?
+				Person upnext = book->waitlist.front();
 				System::String^ person_name = gcnew String(upnext.name.c_str());
-				this->txtUpNextLook->Text = person_name;
+				this->txtWaitlistFirst->Text = person_name;
 			}
 			else {
-				System::String^ person_name = gcnew String(it->borrower.name.c_str());
-				this->txtBorrowerLook->Text = person_name;
+				System::String^ person_name = gcnew String(book->borrower.name.c_str());
+				this->txtBorrower->Text = person_name;
 			}
 		}
 	}
 	private: System::Void btnReturnBook_Click(System::Object^ sender, System::EventArgs^ e) {
-		// TODO: This button needs to go into a separate tab, and it needs to pull from the
-		// Search results once those are implemented.
-		if (!currentbooks.empty() && selectedBookIndex >= 0) {
+		if (!searchResults1.empty() && selectedBookIndex >= 0) {
 			// Get to our specific book
-			std::list<Book>::iterator it;
-			it = currentbooks.begin();
-			advance(it, selectedBookIndex); // "it" is now our book
-			if (returnBook(*it)) { // Did anything change when we tried to return the book?
-				if (!it->waitlist.empty()) {
-					System::String^ person_name = gcnew String(it->waitlist.front().name.c_str());
+			Book* book = searchResults1[selectedSearchIndex];
+			if (returnBook(*book)) { // Did anything change when we tried to return the book?
+				if (!book->waitlist.empty()) {
+					System::String^ person_name = gcnew String(book->waitlist.front().name.c_str());
 					this->txtUpNextLook->Text = person_name;
 				}
 				else {
 					this->txtUpNextLook->Text = "";
 				}
-				this->txtBorrowerLook->Text = gcnew String(it->borrower.name.c_str());
+				this->txtBorrowerLook->Text = gcnew String(book->borrower.name.c_str());
 			}
 		}
 	}
 	private: System::Void btnSearch1_Click(System::Object^ sender, System::EventArgs^ e) {
 		this->lbSearchResult1->Items->Clear();
+		this->txtBorrower->Text = "";
+		this->txtWaitlistFirst->Text = "";
 		searchResults1.clear();
 		std::string title, author, isbn;
 		MarshalString(this->txtTitleSearch1->Text, title); // Convert System::String to std::string
@@ -999,6 +1023,24 @@ namespace CppCLRWinFormsProject {
 			std::string cname = book->title.c_str();
 			System::String^ name = gcnew String(book->title.c_str()); // And then we go back
 			this->lbSearchResult1->Items->Add(name);
+		}
+	}
+	private: System::Void lbSearchResult1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+		// Our index represents how far we need to go into the list to access the book.
+		int index = 0;
+		selectedSearchIndex = this->lbSearchResult1->SelectedIndex; // Useful to quickly delete books
+		for (Book* book : searchResults1) { // Go through the books until we find our book
+			if (index == selectedSearchIndex) {
+				this->txtBorrower->Text = gcnew String(book->borrower.name.c_str());
+				if (!book->waitlist.empty()) {
+					this->txtWaitlistFirst->Text = gcnew String(book->waitlist.front().name.c_str());
+				}
+				else {
+					this->txtWaitlistFirst->Text = "";
+				}
+				break;
+			}
+			index++;
 		}
 	}
 };
