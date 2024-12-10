@@ -91,9 +91,9 @@ int remove(Book* in) {
 	bool workedt = false;
 	bool workedi = false;
 	
-	authors[aIndex].erase(find(authors[aIndex].begin(), authors[aIndex].end(), in));
-	titles[tIndex].erase(find(titles[tIndex].begin(), titles[tIndex].end(), in));
-	isbns[iIndex].erase(find(isbns[iIndex].begin(), isbns[iIndex].end(), in));
+	authors[aIndex].erase(find(authors[aIndex].begin(), (authors[aIndex].end() - 1), in));
+	titles[tIndex].erase(find(titles[tIndex].begin(), (titles[tIndex].end() - 1), in));
+	isbns[iIndex].erase(find(isbns[iIndex].begin(), (isbns[iIndex].end() - 1), in));
 
 	if (sizeA != authors[aIndex].size()) {
 		workeda = true;
