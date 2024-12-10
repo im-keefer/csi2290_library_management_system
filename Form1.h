@@ -51,6 +51,39 @@ std::vector<Book*> searchResults1;
 std::vector<Book*> searchResults2;
 std::vector<Book*> searchResults3;
 
+//People Array
+Person NOUSER("EMPTYNAME");
+std::vector<Person> users(101, NOUSER);
+
+int hashFuncUsers(Person& in) {
+	//A hash function specifically for the users vector. if an invalid user is passed (name == EMPTYNAME), return -1.
+	//else, return an index value.
+	//It looks for either a blank space, or a location that matches the desired value.
+	std::string N = in.name;
+
+	if (N == "EMPTYNAME") {
+		return -1;
+	}
+
+	int iIndex = 0;
+	int Index;
+	int i = 0;
+
+	for (char a : N) {
+		iIndex += a;
+	}
+
+	iIndex = iIndex % 101;
+	Index = iIndex;
+
+	while (users[Index].name != "EMPTYNAME" || users[Index].name != in.name) {
+		i++;
+		Index = Index + (i * i);
+		Index = Index % 101;
+	}
+	return Index;
+}
+
 int hashFunc(std::string in) {
 	//Just a standard hash function
 	int out = 0;
