@@ -15,17 +15,25 @@ struct Person {
 	Person() {};
 };
 
+// Global counter for the amount of registered books
+int numBooks = 0;
+
 struct Book {
 	std::string title;
 	std::string author;
 	std::string isbn;
 	Person borrower;
 	std::queue<Person> waitlist;
+	int _id; // Internal, mainly used when pointer propogation will break
 	Book(std::string title_in, std::string author_in, std::string isbn_in)
 		: title(title_in), author(author_in), isbn(isbn_in)
 	{
+		_id = numBooks++;
 	};
-	Book() {};
+	Book() 
+	{
+		_id = numBooks++;
+	};
 	bool operator==(const Book& other)
 	{
 		if ((this->title == other.title) && (this->author == other.author) && (this->isbn == other.isbn))
@@ -378,6 +386,7 @@ namespace CppCLRWinFormsProject {
 			this->tabControl->SelectedIndex = 0;
 			this->tabControl->Size = System::Drawing::Size(790, 463);
 			this->tabControl->TabIndex = 0;
+			this->tabControl->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::tabControl_TabIndexChanged);
 			// 
 			// tabPage1
 			// 
@@ -655,6 +664,7 @@ namespace CppCLRWinFormsProject {
 			this->btnReturnBook->TabIndex = 23;
 			this->btnReturnBook->Text = L"Return Book";
 			this->btnReturnBook->UseVisualStyleBackColor = true;
+			this->btnReturnBook->Click += gcnew System::EventHandler(this, &Form1::btnReturnBook_Click);
 			// 
 			// btnBorrowBook
 			// 
@@ -815,23 +825,29 @@ namespace CppCLRWinFormsProject {
 			this->txtISBNLook->Text = "";
 			this->txtBorrowerLook->Text = "";
 			this->txtUpNextLook->Text = "";
+			searchResults1.clear(); // Also clear search results since they will now point to stale data
 			selectedBookIndex = -1; // Set our book index to -1 so we know that we have to click again
 		}
 	}
 	private: System::Void btnBorrowBook_Click(System::Object^ sender, System::EventArgs^ e) {
 		if (!searchResults1.empty() && selectedSearchIndex >= 0 && this->txtPersonName->Text != "") {
-			// Get to our specific book
+			// Get to our specific book pointer in the search results
 			Book* book = searchResults1[selectedSearchIndex];
+			// Pointer propogation to our main book list has broken, 
+			// so now we find the real book using our internal id
+			std::list<Book>::iterator it;
+			it = currentbooks.end(); // Earliest book is farthest back in our list
+			advance(it, -(book->_id + 1)); // "it" is now our book
 			std::string name;
 			MarshalString(this->txtPersonName->Text, name);
 			Person person(name);
-			if (checkoutBook(*book, person)) { // Is the waitlist updated?
-				Person upnext = book->waitlist.front();
+			if (checkoutBook(*it, person)) { // Is the waitlist updated?
+				Person upnext = it->waitlist.front();
 				System::String^ person_name = gcnew String(upnext.name.c_str());
 				this->txtWaitlistFirst->Text = person_name;
 			}
 			else {
-				System::String^ person_name = gcnew String(book->borrower.name.c_str());
+				System::String^ person_name = gcnew String(it->borrower.name.c_str());
 				this->txtBorrower->Text = person_name;
 			}
 		}
@@ -840,15 +856,20 @@ namespace CppCLRWinFormsProject {
 		if (!searchResults1.empty() && selectedBookIndex >= 0) {
 			// Get to our specific book
 			Book* book = searchResults1[selectedSearchIndex];
-			if (returnBook(*book)) { // Did anything change when we tried to return the book?
-				if (!book->waitlist.empty()) {
-					System::String^ person_name = gcnew String(book->waitlist.front().name.c_str());
-					this->txtUpNextLook->Text = person_name;
+			// Pointer propogation to our main book list has broken, 
+			// so now we find the real book using our internal id
+			std::list<Book>::iterator it;
+			it = currentbooks.end(); // Earliest book is farthest back in our list
+			advance(it, -(book->_id + 1)); // "it" is now our book
+			if (returnBook(*it)) { // Did anything change when we tried to return the book?
+				if (!it->waitlist.empty()) {
+					System::String^ person_name = gcnew String(it->waitlist.front().name.c_str());
+					this->txtWaitlistFirst->Text = person_name;
 				}
 				else {
-					this->txtUpNextLook->Text = "";
+					this->txtWaitlistFirst->Text = "";
 				}
-				this->txtBorrowerLook->Text = gcnew String(book->borrower.name.c_str());
+				this->txtBorrower->Text = gcnew String(it->borrower.name.c_str());
 			}
 		}
 	}
@@ -1037,9 +1058,14 @@ namespace CppCLRWinFormsProject {
 		selectedSearchIndex = this->lbSearchResult1->SelectedIndex; // Useful to quickly delete books
 		for (Book* book : searchResults1) { // Go through the books until we find our book
 			if (index == selectedSearchIndex) {
-				this->txtBorrower->Text = gcnew String(book->borrower.name.c_str());
-				if (!book->waitlist.empty()) {
-					this->txtWaitlistFirst->Text = gcnew String(book->waitlist.front().name.c_str());
+				// Since pointer propagation is broken here,
+				// find the real book using the internal id.
+				std::list<Book>::iterator it;
+				it = currentbooks.end(); // Earliest book is farthest back in our list
+				advance(it, -(book->_id + 1)); // "it" is now our book
+				this->txtBorrower->Text = gcnew String(it->borrower.name.c_str());
+				if (!it->waitlist.empty()) {
+					this->txtWaitlistFirst->Text = gcnew String(it->waitlist.front().name.c_str());
 				}
 				else {
 					this->txtWaitlistFirst->Text = "";
@@ -1047,6 +1073,29 @@ namespace CppCLRWinFormsProject {
 				break;
 			}
 			index++;
+		}
+	}
+	private: System::Void tabControl_TabIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+		if (this->tabControl->SelectedIndex == 0) {
+			// Update information on the last selected book
+			int index = 0;
+			selectedBookIndex = this->lbBookList1->SelectedIndex; // Useful to quickly delete books
+			for (Book book : currentbooks) { // Go through the books until we find our book
+				if (index == this->lbBookList1->SelectedIndex) {
+					this->txtTitleLook->Text = gcnew String(book.title.c_str());
+					this->txtAuthorLook->Text = gcnew String(book.author.c_str());
+					this->txtISBNLook->Text = gcnew String(book.isbn.c_str());
+					this->txtBorrowerLook->Text = gcnew String(book.borrower.name.c_str());
+					if (!book.waitlist.empty()) {
+						this->txtUpNextLook->Text = gcnew String(book.waitlist.front().name.c_str());
+					}
+					else {
+						this->txtUpNextLook->Text = "";
+					}
+					break;
+				}
+				index++;
+			}
 		}
 	}
 };
