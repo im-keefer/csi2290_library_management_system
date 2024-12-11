@@ -149,8 +149,8 @@ int remove(Book* in) {
 
 // Default Book Initialization
 
-/*
-void initializeBooks(std::list<Book>& L) {
+
+void initializeBooks(std::list<Book>* L) {
 	//Takes a list of books. Adds 5 books, use as a starting point.
 	//To add more, use the format:
 	// 
@@ -163,42 +163,46 @@ void initializeBooks(std::list<Book>& L) {
 	//
 
 	Book B = Book("Data Structures & Algorithm Analysis in C++ 4th Edition", "Mark Allen Weiss", "978-0-13-284737-7");
-	B.borrower = Person("Bob Smith");
+	Person* borrower = new Person("Bob Smith");
+	registerUser(borrower);
+	B.borrower = borrower;
 
-	L.push_back(B);
-	Book* BP = &L.back();
+	L->push_back(B);
+	Book* BP = &L->back();
 
 	insert(BP);
+	borrower->borrowed.push_back(BP);
 
 	B = Book("The Merriam-Webster Dictionary (2022)", "N/A", "978-0-87779-095-2");
 
-	L.push_back(B);
-	BP = &L.back();
+	L->push_back(B);
+	BP = &L->back();
 
 	insert(BP);
 
-	L.push_back(B);
-	BP = &L.back();
+	B = Book("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "978-0-74753-274-3");
+
+	L->push_back(B);
+	BP = &L->back();
 
 	insert(BP);
 
 	B = Book("C++ for Dummies 6th Edition", "Stephen R. Davis", "978-0470317266");
 
 
-	L.push_back(B);
-	BP = &L.back();
+	L->push_back(B);
+	BP = &L->back();
 
 	insert(BP);
 
 	B = Book("Introduction to Analog & Digital Circuits 2nd Edition", "Brian K. Dean & Daniel Llamocca", "978-1-7924-1609-5");
 
 
-	L.push_back(B);
-	BP = &L.back();
+	L->push_back(B);
+	BP = &L->back();
 
 	insert(BP);
 }
-*/
 
 //Checking out & Returning book functions
 
@@ -387,6 +391,8 @@ namespace CppCLRWinFormsProject {
 		{
 			this->tabControl = (gcnew System::Windows::Forms::TabControl());
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
+			this->label19 = (gcnew System::Windows::Forms::Label());
+			this->label18 = (gcnew System::Windows::Forms::Label());
 			this->lbPersonList = (gcnew System::Windows::Forms::ListBox());
 			this->txtUpNextLook = (gcnew System::Windows::Forms::TextBox());
 			this->label9 = (gcnew System::Windows::Forms::Label());
@@ -434,8 +440,6 @@ namespace CppCLRWinFormsProject {
 			this->btnNameSearch = (gcnew System::Windows::Forms::Button());
 			this->label15 = (gcnew System::Windows::Forms::Label());
 			this->txtPersonSearch = (gcnew System::Windows::Forms::TextBox());
-			this->label18 = (gcnew System::Windows::Forms::Label());
-			this->label19 = (gcnew System::Windows::Forms::Label());
 			this->tabControl->SuspendLayout();
 			this->tabPage1->SuspendLayout();
 			this->tabPage2->SuspendLayout();
@@ -486,12 +490,31 @@ namespace CppCLRWinFormsProject {
 			this->tabPage1->Text = L"System Management";
 			this->tabPage1->UseVisualStyleBackColor = true;
 			// 
+			// label19
+			// 
+			this->label19->AutoSize = true;
+			this->label19->Location = System::Drawing::Point(6, 206);
+			this->label19->Name = L"label19";
+			this->label19->Size = System::Drawing::Size(113, 16);
+			this->label19->TabIndex = 26;
+			this->label19->Text = L"Registered Users";
+			// 
+			// label18
+			// 
+			this->label18->AutoSize = true;
+			this->label18->Location = System::Drawing::Point(6, 4);
+			this->label18->Name = L"label18";
+			this->label18->Size = System::Drawing::Size(116, 16);
+			this->label18->TabIndex = 25;
+			this->label18->Text = L"Registered Books";
+			// 
 			// lbPersonList
 			// 
 			this->lbPersonList->FormattingEnabled = true;
 			this->lbPersonList->ItemHeight = 16;
 			this->lbPersonList->Location = System::Drawing::Point(7, 226);
 			this->lbPersonList->Name = L"lbPersonList";
+			this->lbPersonList->SelectionMode = System::Windows::Forms::SelectionMode::None;
 			this->lbPersonList->Size = System::Drawing::Size(232, 196);
 			this->lbPersonList->TabIndex = 24;
 			// 
@@ -926,24 +949,6 @@ namespace CppCLRWinFormsProject {
 			this->txtPersonSearch->Size = System::Drawing::Size(173, 22);
 			this->txtPersonSearch->TabIndex = 0;
 			// 
-			// label18
-			// 
-			this->label18->AutoSize = true;
-			this->label18->Location = System::Drawing::Point(6, 4);
-			this->label18->Name = L"label18";
-			this->label18->Size = System::Drawing::Size(116, 16);
-			this->label18->TabIndex = 25;
-			this->label18->Text = L"Registered Books";
-			// 
-			// label19
-			// 
-			this->label19->AutoSize = true;
-			this->label19->Location = System::Drawing::Point(6, 206);
-			this->label19->Name = L"label19";
-			this->label19->Size = System::Drawing::Size(113, 16);
-			this->label19->TabIndex = 26;
-			this->label19->Text = L"Registered Users";
-			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -952,6 +957,7 @@ namespace CppCLRWinFormsProject {
 			this->Controls->Add(this->tabControl);
 			this->Name = L"Form1";
 			this->Text = L"Library Management System";
+			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
 			this->tabControl->ResumeLayout(false);
 			this->tabPage1->ResumeLayout(false);
 			this->tabPage1->PerformLayout();
@@ -1382,6 +1388,19 @@ namespace CppCLRWinFormsProject {
 			book->waitlist.push(person);
 		}
 		lbInWaitlist->Items->RemoveAt(lbInWaitlist->SelectedIndex);
+	}
+	private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
+		initializeBooks(&currentbooks);
+		for (Book book : currentbooks) {
+			System::String^ name = gcnew String(book.title.c_str()); // And then we go back
+			this->lbBookList1->Items->Add(name);
+		}
+		for (Person* person : users) {
+			if (person->name != "EMPTYNAME") {
+				System::String^ person_name = gcnew String(person->name.c_str());
+				this->lbPersonList->Items->Add(person_name);
+			}
+		}
 	}
 };
 }
