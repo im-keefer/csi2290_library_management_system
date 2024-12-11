@@ -778,6 +778,7 @@ namespace CppCLRWinFormsProject {
 			// 
 			// btnBorrowBook
 			// 
+			this->btnBorrowBook->Enabled = false;
 			this->btnBorrowBook->Location = System::Drawing::Point(251, 400);
 			this->btnBorrowBook->Name = L"btnBorrowBook";
 			this->btnBorrowBook->Size = System::Drawing::Size(223, 28);
@@ -1104,9 +1105,14 @@ namespace CppCLRWinFormsProject {
 				}
 			}
 		}
+		else {
+			MessageBox::Show("Please enter the name of the person who is borrowing this book.");
+			return;
+		}
 	}
 	private: System::Void btnSearch1_Click(System::Object^ sender, System::EventArgs^ e) {
 		this->lbSearchResult1->Items->Clear();
+		this->btnBorrowBook->Enabled = false;
 		this->txtBorrower->Text = "";
 		this->txtWaitlistFirst->Text = "";
 		searchResults1.clear();
@@ -1290,6 +1296,7 @@ namespace CppCLRWinFormsProject {
 		selectedSearchIndex = this->lbSearchResult1->SelectedIndex; // Useful to quickly delete books
 		for (Book* book : searchResults1) { // Go through the books until we find our book
 			if (index == selectedSearchIndex) {
+				btnBorrowBook->Enabled = true;
 				// Since pointer propagation is broken here,
 				// find the real book using the internal id.
 				std::list<Book>::iterator it;
@@ -1297,6 +1304,8 @@ namespace CppCLRWinFormsProject {
 				advance(it, -(book->_id + 1)); // "it" is now our book
 				if (it->borrower != nullptr)
 					this->txtBorrower->Text = gcnew String(it->borrower->name.c_str());
+				else
+					this->txtBorrower->Text = "";
 				if (!it->waitlist.empty()) {
 					this->txtWaitlistFirst->Text = gcnew String(it->waitlist.front()->name.c_str());
 				}
