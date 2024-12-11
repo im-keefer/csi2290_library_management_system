@@ -1078,7 +1078,7 @@ namespace CppCLRWinFormsProject {
 			std::string name;
 			MarshalString(this->txtPersonName->Text, name);
 			Person* person = accessUser(name);
-			if (person == nullptr) {
+			if (person == nullptr || person->name == "EMPTYNAME") {
 				person = new Person(name);
 				registerUser(person);
 			}
