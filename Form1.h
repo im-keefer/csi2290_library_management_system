@@ -174,7 +174,7 @@ void initializeBooks(std::list<Book>* L) {
 	//To add more, use the format:
 	// 
 	//	B = Book("title","author","isbn");
-	//	L.push_back(B);
+	//	L.push_front(B);
 	// 
 	//	BP = L.back()*;
 	// 
@@ -186,39 +186,39 @@ void initializeBooks(std::list<Book>* L) {
 	registerUser(borrower);
 	B.borrower = borrower;
 
-	L->push_back(B);
-	Book* BP = &L->back();
+	L->push_front(B);
+	Book* BP = &L->front();
 
 	insert(BP);
 	borrower->borrowed.push_back(BP);
 
 	B = Book("The Merriam-Webster Dictionary (2022)", "N/A", "978-0-87779-095-2");
 
-	L->push_back(B);
-	BP = &L->back();
+	L->push_front(B);
+	BP = &L->front();
 
 	insert(BP);
 
 	B = Book("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "978-0-74753-274-3");
 
-	L->push_back(B);
-	BP = &L->back();
+	L->push_front(B);
+	BP = &L->front();
 
 	insert(BP);
 
 	B = Book("C++ for Dummies 6th Edition", "Stephen R. Davis", "978-0470317266");
 
 
-	L->push_back(B);
-	BP = &L->back();
+	L->push_front(B);
+	BP = &L->front();
 
 	insert(BP);
 
 	B = Book("Introduction to Analog & Digital Circuits 2nd Edition", "Brian K. Dean & Daniel Llamocca", "978-1-7924-1609-5");
 
 
-	L->push_back(B);
-	BP = &L->back();
+	L->push_front(B);
+	BP = &L->front();
 
 	insert(BP);
 }
@@ -1064,10 +1064,7 @@ namespace CppCLRWinFormsProject {
 			// so now we find the real book using our internal id
 			std::list<Book>::iterator it;
 			it = currentbooks.end(); // Earliest book is farthest back in our list
-			if (book->_id == 0)
-				advance(it, -(book->_id + 1)); // "it" is now our book
-			else
-				advance(it, -(book->_id));
+			advance(it, -(book->_id + 1)); // "it" is now our book
 			std::string name;
 			MarshalString(this->txtPersonName->Text, name);
 			Person* person = new Person(name);
@@ -1384,9 +1381,16 @@ namespace CppCLRWinFormsProject {
 		lbBorrowing->Items->RemoveAt(lbBorrowing->SelectedIndex);
 	}
 	private: System::Void lbInWaitlist_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+		
 		lblWillRecieve->Visible = false;
-		if (currentPerson->waitlisted[lbInWaitlist->SelectedIndex]->waitlist.front() == currentPerson) {
-			lblWillRecieve->Visible = true; // Notify the user that they are up next to borrow this book.
+		if (!currentPerson->waitlisted.empty() && lbInWaitlist->SelectedIndex != -1) {
+			btnCancelWait->Enabled = true;
+			if (currentPerson->waitlisted[lbInWaitlist->SelectedIndex]->waitlist.front() == currentPerson) {
+				lblWillRecieve->Visible = true; // Notify the user that they are up next to borrow this book.
+			}
+		}
+		else {
+			btnCancelWait->Enabled = false;
 		}
 	}
 	private: System::Void btnCancelWait_Click(System::Object^ sender, System::EventArgs^ e) {
