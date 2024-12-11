@@ -114,7 +114,8 @@ int remove(Book* in) {
 	//Lastly, update internal book id's to preserve ordering
 	//If it's deleted, return 0, if it's not, return 1.
 	//If something goes wrong and it's only found in some of them, return 2.
-	in->borrower->borrowed.erase(find(in->borrower->borrowed.begin(), (in->borrower->borrowed.end() - 1), in));
+	if (in->borrower != nullptr)
+		in->borrower->borrowed.erase(find(in->borrower->borrowed.begin(), (in->borrower->borrowed.end() - 1), in));
 	while (!in->waitlist.empty()) {
 		in->waitlist.front()->waitlisted.erase(find(in->waitlist.front()->waitlisted.begin(), (in->waitlist.front()->waitlisted.end() - 1), in));
 		in->waitlist.pop();
@@ -570,6 +571,7 @@ namespace CppCLRWinFormsProject {
 			// 
 			// btnDeleteBook
 			// 
+			this->btnDeleteBook->Enabled = false;
 			this->btnDeleteBook->Location = System::Drawing::Point(248, 399);
 			this->btnDeleteBook->Name = L"btnDeleteBook";
 			this->btnDeleteBook->Size = System::Drawing::Size(223, 28);
@@ -994,6 +996,7 @@ namespace CppCLRWinFormsProject {
 		selectedBookIndex = this->lbBookList1->SelectedIndex; // Useful to quickly delete books
 		for (Book book : currentbooks) { // Go through the books until we find our book
 			if (index == this->lbBookList1->SelectedIndex) {
+				btnDeleteBook->Enabled = true;
 				this->txtTitleLook->Text = gcnew String(book.title.c_str());
 				this->txtAuthorLook->Text = gcnew String(book.author.c_str());
 				this->txtISBNLook->Text = gcnew String(book.isbn.c_str());
@@ -1053,7 +1056,12 @@ namespace CppCLRWinFormsProject {
 			this->txtBorrowerLook->Text = "";
 			this->txtUpNextLook->Text = "";
 			searchResults1.clear(); // Also clear search results since they will now point to stale data
+			this->lbSearchResult1->Items->Clear();
+			this->txtBorrower->Text = "";
+			this->txtWaitlistFirst->Text = "";
 			selectedBookIndex = -1; // Set our book index to -1 so we know that we have to click again
+			if (currentbooks.empty()) // Disable this button when we have no more books
+				btnDeleteBook->Enabled = false;
 		}
 	}
 	private: System::Void btnBorrowBook_Click(System::Object^ sender, System::EventArgs^ e) {
