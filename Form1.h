@@ -1366,8 +1366,10 @@ namespace CppCLRWinFormsProject {
 		Person* person = accessUser(name);
 		currentPerson = person;
 		if (person != nullptr) {
-			btnReturnBook->Enabled = true;
-			btnCancelWait->Enabled = true;
+			if (person->borrowed.size() > 0)
+				btnReturnBook->Enabled = true;
+			if (person->waitlisted.size() > 0)
+				btnCancelWait->Enabled = true;
 			for (Book* book : person->borrowed) {
 				std::string cname = book->title.c_str();
 				System::String^ name = gcnew String(book->title.c_str()); // And then we go back
@@ -1384,6 +1386,10 @@ namespace CppCLRWinFormsProject {
 		}
 	}
 	private: System::Void btnReturnBook_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (lbBorrowing->SelectedIndex == -1) {
+			MessageBox::Show("No book selected. Select a book before using this option.");
+			return;
+		}
 		if (currentPerson == nullptr) {
 			MessageBox::Show("Please search for a person before using this option.");
 			return;
@@ -1392,6 +1398,8 @@ namespace CppCLRWinFormsProject {
 		returnBook(*book); // Return the book
 		currentPerson->borrowed.erase(currentPerson->borrowed.begin() + lbBorrowing->SelectedIndex);
 		lbBorrowing->Items->RemoveAt(lbBorrowing->SelectedIndex);
+		if (currentPerson->borrowed.size() == 0)
+			btnReturnBook->Enabled = false; // Disable this button when there is nothing left
 	}
 	private: System::Void lbInWaitlist_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 		
@@ -1407,6 +1415,10 @@ namespace CppCLRWinFormsProject {
 		}
 	}
 	private: System::Void btnCancelWait_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (lbInWaitlist->SelectedIndex == -1) {
+			MessageBox::Show("No book selected. Select a book before using this option.");
+			return;
+		}
 		if (currentPerson == nullptr) {
 			MessageBox::Show("Please search for a person before using this option.");
 			return;
@@ -1424,6 +1436,8 @@ namespace CppCLRWinFormsProject {
 			book->waitlist.push(person);
 		}
 		lbInWaitlist->Items->RemoveAt(lbInWaitlist->SelectedIndex);
+		if (currentPerson->waitlisted.size() == 0)
+			btnCancelWait->Enabled = false; // Disable this button when there is nothing left
 	}
 	private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
 		initializeBooks(&currentbooks);
