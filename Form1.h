@@ -365,6 +365,9 @@ namespace CppCLRWinFormsProject {
 	private: System::Windows::Forms::Label^ lblWillRecieve;
 	private: System::Windows::Forms::Button^ btnReturnBook;
 	private: System::Windows::Forms::Button^ btnCancelWait;
+	private: System::Windows::Forms::ListBox^ lbPersonList;
+	private: System::Windows::Forms::Label^ label19;
+	private: System::Windows::Forms::Label^ label18;
 
 
 
@@ -384,6 +387,7 @@ namespace CppCLRWinFormsProject {
 		{
 			this->tabControl = (gcnew System::Windows::Forms::TabControl());
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
+			this->lbPersonList = (gcnew System::Windows::Forms::ListBox());
 			this->txtUpNextLook = (gcnew System::Windows::Forms::TextBox());
 			this->label9 = (gcnew System::Windows::Forms::Label());
 			this->txtBorrowerLook = (gcnew System::Windows::Forms::TextBox());
@@ -430,6 +434,8 @@ namespace CppCLRWinFormsProject {
 			this->btnNameSearch = (gcnew System::Windows::Forms::Button());
 			this->label15 = (gcnew System::Windows::Forms::Label());
 			this->txtPersonSearch = (gcnew System::Windows::Forms::TextBox());
+			this->label18 = (gcnew System::Windows::Forms::Label());
+			this->label19 = (gcnew System::Windows::Forms::Label());
 			this->tabControl->SuspendLayout();
 			this->tabPage1->SuspendLayout();
 			this->tabPage2->SuspendLayout();
@@ -450,6 +456,9 @@ namespace CppCLRWinFormsProject {
 			// 
 			// tabPage1
 			// 
+			this->tabPage1->Controls->Add(this->label19);
+			this->tabPage1->Controls->Add(this->label18);
+			this->tabPage1->Controls->Add(this->lbPersonList);
 			this->tabPage1->Controls->Add(this->txtUpNextLook);
 			this->tabPage1->Controls->Add(this->label9);
 			this->tabPage1->Controls->Add(this->txtBorrowerLook);
@@ -474,8 +483,17 @@ namespace CppCLRWinFormsProject {
 			this->tabPage1->Padding = System::Windows::Forms::Padding(3);
 			this->tabPage1->Size = System::Drawing::Size(507, 434);
 			this->tabPage1->TabIndex = 0;
-			this->tabPage1->Text = L"Book Management";
+			this->tabPage1->Text = L"System Management";
 			this->tabPage1->UseVisualStyleBackColor = true;
+			// 
+			// lbPersonList
+			// 
+			this->lbPersonList->FormattingEnabled = true;
+			this->lbPersonList->ItemHeight = 16;
+			this->lbPersonList->Location = System::Drawing::Point(7, 226);
+			this->lbPersonList->Name = L"lbPersonList";
+			this->lbPersonList->Size = System::Drawing::Size(232, 196);
+			this->lbPersonList->TabIndex = 24;
 			// 
 			// txtUpNextLook
 			// 
@@ -634,9 +652,9 @@ namespace CppCLRWinFormsProject {
 			// 
 			this->lbBookList1->FormattingEnabled = true;
 			this->lbBookList1->ItemHeight = 16;
-			this->lbBookList1->Location = System::Drawing::Point(7, 7);
+			this->lbBookList1->Location = System::Drawing::Point(7, 23);
 			this->lbBookList1->Name = L"lbBookList1";
-			this->lbBookList1->Size = System::Drawing::Size(232, 420);
+			this->lbBookList1->Size = System::Drawing::Size(232, 180);
 			this->lbBookList1->TabIndex = 0;
 			this->lbBookList1->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::lbBookList1_SelectedIndexChanged);
 			// 
@@ -908,6 +926,24 @@ namespace CppCLRWinFormsProject {
 			this->txtPersonSearch->Size = System::Drawing::Size(173, 22);
 			this->txtPersonSearch->TabIndex = 0;
 			// 
+			// label18
+			// 
+			this->label18->AutoSize = true;
+			this->label18->Location = System::Drawing::Point(6, 4);
+			this->label18->Name = L"label18";
+			this->label18->Size = System::Drawing::Size(116, 16);
+			this->label18->TabIndex = 25;
+			this->label18->Text = L"Registered Books";
+			// 
+			// label19
+			// 
+			this->label19->AutoSize = true;
+			this->label19->Location = System::Drawing::Point(6, 206);
+			this->label19->Name = L"label19";
+			this->label19->Size = System::Drawing::Size(113, 16);
+			this->label19->TabIndex = 26;
+			this->label19->Text = L"Registered Users";
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -1019,6 +1055,14 @@ namespace CppCLRWinFormsProject {
 			else {
 				System::String^ person_name = gcnew String(it->borrower->name.c_str());
 				this->txtBorrower->Text = person_name;
+			}
+			// INTERNAL: Update the items in the person list
+			this->lbPersonList->Items->Clear();
+			for (Person* person : users) {
+				if (person->name != "EMPTYNAME") {
+					System::String^ person_name = gcnew String(person->name.c_str());
+					this->lbPersonList->Items->Add(person_name);
+				}
 			}
 		}
 	}
@@ -1249,7 +1293,6 @@ namespace CppCLRWinFormsProject {
 				}
 				index++;
 			}
-
 		}
 		else if (this->tabControl->SelectedIndex == 1) { // Are we moving to Borrowing?
 			int index = 0;
