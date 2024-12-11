@@ -1449,6 +1449,7 @@ namespace CppCLRWinFormsProject {
 			book->waitlist.push(person);
 		}
 		lbInWaitlist->Items->RemoveAt(lbInWaitlist->SelectedIndex);
+		currentPerson->waitlisted.erase(find(currentPerson->waitlisted.begin(), (currentPerson->waitlisted.end() - 1), book));
 		if (currentPerson->waitlisted.size() == 0)
 			btnCancelWait->Enabled = false; // Disable this button when there is nothing left
 	}
