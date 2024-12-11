@@ -1023,6 +1023,10 @@ namespace CppCLRWinFormsProject {
 		MarshalString(this->txtTitle->Text, title); // Convert System::String to std::string
 		MarshalString(this->txtAuthor->Text, author);
 		MarshalString(this->txtISBN->Text, isbn);
+		if (title == "" || author == "" || isbn == "") {
+			MessageBox::Show("Some information is missing, please add all necessary information to the book.");
+			return;
+		}
 		Book* newBook = new Book; // Intentionally carve out some memory for this book, otherwise the values get all messed up later!
 		newBook->title = title;
 		newBook->author = author;
