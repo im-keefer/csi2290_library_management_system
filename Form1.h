@@ -16,6 +16,9 @@ std::vector<Book*> searchResults1;
 std::vector<Book*> searchResults2;
 std::vector<Book*> searchResults3;
 
+//Main Book List
+std::list<Book> currentbooks;
+
 //People Array
 Person NOUSER("EMPTYNAME");
 std::vector<Person*> users(101, &NOUSER);
@@ -105,10 +108,18 @@ void insert(Book* in) {
 
 int remove(Book* in) {
 	//Takes a pointer to a book.
+	//Removes the book from all users relevant to it(Borrowers and Those on it's waitlist)
 	//Gets the appropriate indicies for the arrays. Also gets the initial sizes for the vectors.
 	//Then, delete the book if it's in the vectors
+	//Lastly, update internal book id's to preserve ordering
 	//If it's deleted, return 0, if it's not, return 1.
 	//If something goes wrong and it's only found in some of them, return 2.
+	in->borrower->borrowed.erase(find(in->borrower->borrowed.begin(), (in->borrower->borrowed.end() - 1), in));
+	while (!in->waitlist.empty()) {
+		in->waitlist.front()->waitlisted.erase(find(in->waitlist.front()->waitlisted.begin(), (in->waitlist.front()->waitlisted.end() - 1), in));
+		in->waitlist.pop();
+	}
+
 	int aIndex = hashFunc(in->author);
 	int tIndex = hashFunc(in->title);
 	int iIndex = hashFunc(in->isbn);
@@ -124,6 +135,14 @@ int remove(Book* in) {
 	authors[aIndex].erase(find(authors[aIndex].begin(), (authors[aIndex].end() - 1), in));
 	titles[tIndex].erase(find(titles[tIndex].begin(), (titles[tIndex].end() - 1), in));
 	isbns[iIndex].erase(find(isbns[iIndex].begin(), (isbns[iIndex].end() - 1), in));
+
+	std::list<Book>::iterator it;
+	it = currentbooks.begin();
+	while (it != currentbooks.end()) {
+		if (it->_id > in->_id)
+			it->_id -= 1;
+		advance(it, 1);
+	}
 
 	if (sizeA != authors[aIndex].size()) {
 		workeda = true;
@@ -253,9 +272,6 @@ int returnBook(Book& B) {
 		return 1;
 	}
 }
-
-
-std::list<Book> currentbooks;
 
 // .NET has a special string type that we need to convert back to standard c++ strings
 void MarshalString(String^ s, std::string& os) {
@@ -1048,7 +1064,10 @@ namespace CppCLRWinFormsProject {
 			// so now we find the real book using our internal id
 			std::list<Book>::iterator it;
 			it = currentbooks.end(); // Earliest book is farthest back in our list
-			advance(it, -(book->_id + 1)); // "it" is now our book
+			if (book->_id == 0)
+				advance(it, -(book->_id + 1)); // "it" is now our book
+			else
+				advance(it, -(book->_id));
 			std::string name;
 			MarshalString(this->txtPersonName->Text, name);
 			Person* person = new Person(name);
