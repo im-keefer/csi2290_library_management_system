@@ -145,6 +145,8 @@ int remove(Book* in) {
 		advance(it, 1);
 	}
 
+	numBooks -= 1;
+
 	if (sizeA != authors[aIndex].size()) {
 		workeda = true;
 	}
@@ -1075,8 +1077,11 @@ namespace CppCLRWinFormsProject {
 			advance(it, -(book->_id + 1)); // "it" is now our book
 			std::string name;
 			MarshalString(this->txtPersonName->Text, name);
-			Person* person = new Person(name);
-			registerUser(person);
+			Person* person = accessUser(name);
+			if (person == nullptr) {
+				person = new Person(name);
+				registerUser(person);
+			}
 			if (checkoutBook(*it, person)) { // Is the waitlist updated?
 				Person* upnext = it->waitlist.front();
 				System::String^ person_name = gcnew String(upnext->name.c_str());
