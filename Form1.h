@@ -1367,6 +1367,30 @@ namespace CppCLRWinFormsProject {
 				index++;
 			}
 		}
+		else if (this->tabControl->SelectedIndex == 2) { // Are we moving to Account Management?
+			if (currentPerson != nullptr) {
+				if (currentPerson->borrowed.size() > 0)
+					btnReturnBook->Enabled = true;
+				else
+					btnReturnBook->Enabled = false;
+				if (currentPerson->waitlisted.size() > 0)
+					btnCancelWait->Enabled = true;
+				else
+					btnCancelWait->Enabled = false;
+				this->lbBorrowing->Items->Clear();
+				this->lbInWaitlist->Items->Clear();
+				for (Book* book : currentPerson->borrowed) {
+					std::string cname = book->title.c_str();
+					System::String^ name = gcnew String(book->title.c_str()); // And then we go back
+					this->lbBorrowing->Items->Add(name);
+				}
+				for (Book* book : currentPerson->waitlisted) {
+					std::string cname = book->title.c_str();
+					System::String^ name = gcnew String(book->title.c_str()); // And then we go back
+					this->lbInWaitlist->Items->Add(name);
+				}
+			}
+		}
 	}
 	private:
 		Person* currentPerson = nullptr; // Used to save who we currently are looking at
@@ -1378,7 +1402,7 @@ namespace CppCLRWinFormsProject {
 		MarshalString(this->txtPersonSearch->Text, name); // Convert System::String to std::string
 		Person* person = accessUser(name);
 		currentPerson = person;
-		if (person != nullptr) {
+		if (person != nullptr && (person && person->name != "EMPTYNAME")) {
 			if (person->borrowed.size() > 0)
 				btnReturnBook->Enabled = true;
 			if (person->waitlisted.size() > 0)
@@ -1395,7 +1419,8 @@ namespace CppCLRWinFormsProject {
 			}
 		}
 		else {
-			MessageBox::Show("Entered name is either invalid, or is not yet registered in our records.");
+			MessageBox::Show("Entered name is either invalid, or is not yet tied to a registered user.");
+			return;
 		}
 	}
 	private: System::Void btnReturnBook_Click(System::Object^ sender, System::EventArgs^ e) {
